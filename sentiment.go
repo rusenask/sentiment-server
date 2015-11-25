@@ -3,8 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
+	log "github.com/Sirupsen/logrus"
 	"net/http"
+	"os"
 
 	"github.com/cdipaolo/sentiment"
 )
@@ -14,6 +15,10 @@ var (
 )
 
 func init() {
+	// Output to stderr instead of stdout, could also be a file.
+	log.SetOutput(os.Stderr)
+	log.SetFormatter(&log.TextFormatter{})
+
 	var err error
 	model, err = sentiment.Restore()
 	if err != nil {
@@ -32,6 +37,11 @@ func main() {
 	if err != nil {
 		panic(fmt.Sprintf("ERROR: error parsing configuration!\n\t%v\n", err.Error()))
 	}
+
+	// server starting message
+	log.WithFields(log.Fields{
+		"port": Config.portString,
+	}).Info("Sentiment analysis is starting...")
 
 	log.Printf("Listening at http://127.0.0.1%v ...\n", Config.portString)
 	log.Fatal(http.ListenAndServe(Config.portString, nil))

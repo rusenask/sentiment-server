@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
+
+	log "github.com/Sirupsen/logrus"
 )
 
 func HandleGetProductReview(r http.ResponseWriter, req *http.Request) {
@@ -35,6 +36,12 @@ func HandleGetProductReview(r http.ResponseWriter, req *http.Request) {
 		log.Printf("POST /analyze > ERROR: error unmarshalling given JSON\n\t%v\n", err)
 		return
 	}
+
+	log.WithFields(log.Fields{
+		"supplier": j.Supplier,
+		"model":    j.Model,
+		"part":     j.Part,
+	}).Info("Got review request.. ")
 
 	r.WriteHeader(http.StatusOK)
 	r.Write([]byte("Not implemented yet"))
