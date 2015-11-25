@@ -21,6 +21,7 @@ func init() {
 	}
 
 	http.Handle("/analyze", Post(HandleSentiment))
+	http.Handle("/review", Post(HandleGetProductReview))
 	http.Handle("/task", Post(HandleHookedRequest))
 	http.Handle("/", Get(HandleStatus))
 }
